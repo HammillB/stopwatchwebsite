@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coaching Stopwatch — Time every runner, every interval</title>
+<meta name="description" content="Coaching Stopwatch tracks up to 10 runners or groups through run/rest intervals on independent timers, then exports the session to CSV. No ads, no account.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F2ED;
+    --bg-alt:#E7E9E1;
+    --ink:#16211C;
+    --muted:#5B655F;
+    --clay:#B5432B;
+    --clay-dark:#8E3220;
+    --turf:#2F5233;
+    --amber:#9C6B1F;
+    --line:#C9CCC2;
+    --white:#FFFFFF;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--clay-dark);}
+  a:focus-visible, button:focus-visible{outline:3px solid var(--turf); outline-offset:3px;}
+  h1,h2,h3{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    line-height:1.05;
+    margin:0 0 0.4em 0;
+    letter-spacing:0.2px;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- header ---------- */
+  header{
+    padding:22px 0;
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand img{width:34px; height:34px; border-radius:8px; display:block;}
+  .brand span{font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:1.3rem;}
+  .badge-link img{height:42px; display:block;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 48px;}
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 3.6rem);
+    max-width:11ch;
+    color:var(--ink);
+  }
+  .hero p.sub{
+    max-width:52ch;
+    color:var(--muted);
+    font-size:1.1rem;
+    margin:18px 0 32px;
+  }
+  .stopwatch-demo{
+    display:inline-flex;
+    align-items:center;
+    gap:18px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 22px;
+    margin-bottom:32px;
+  }
+  .stopwatch-demo .dot{
+    width:9px; height:9px; border-radius:50%; background:var(--clay);
+    box-shadow:0 0 0 4px rgba(181,67,43,0.15);
+  }
+  .stopwatch-demo .label{
+    font-size:0.78rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:2px;
+  }
+  .stopwatch-demo .time{
+    font-size:1.7rem;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .cta-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .cta-row .badge-link img{height:54px;}
+  .cta-note{color:var(--muted); font-size:0.92rem;}
+
+  /* ---------- section rule ---------- */
+  section{padding:48px 0;}
+  section.ruled{border-top:1px solid var(--line);}
+  .kicker{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:1.6rem;
+    margin-bottom:14px;
+  }
+  section p{color:var(--muted); max-width:60ch;}
+
+  /* ---------- who it's for ---------- */
+  .for-who p{font-size:1.05rem;}
+  .for-who strong{color:var(--ink); font-weight:600;}
+
+  /* ---------- steps ---------- */
+  .step{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:36px;
+    align-items:center;
+    padding:36px 0;
+  }
+  .step:not(:last-child){border-bottom:1px solid var(--line);}
+  .step.reverse{grid-template-columns:1fr 280px;}
+  .step.reverse .step-shot{order:2;}
+  .step-num{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--clay);
+    font-size:0.95rem;
+    margin-bottom:8px;
+  }
+  .step h3{font-size:1.7rem; margin-bottom:10px;}
+  .step p{margin:0; font-size:1rem;}
+  .step-shot{
+    background:var(--ink);
+    border-radius:24px;
+    padding:10px;
+    box-shadow:0 18px 40px -20px rgba(22,33,28,0.45);
+    justify-self:center;
+  }
+  .step-shot img{
+    display:block;
+    width:100%;
+    border-radius:16px;
+    aspect-ratio:1080/2340;
+    object-fit:cover;
+  }
+
+  /* ---------- feature strip ---------- */
+  .features{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+  }
+  .feature{
+    padding:22px 28px 22px 0;
+    border-top:1px solid var(--line);
+  }
+  .feature:nth-child(odd){padding-right:28px;}
+  .feature:nth-child(even){padding-left:28px; border-left:1px solid var(--line);}
+  .feature:nth-child(-n+2){border-top:none;}
+  .feature h4{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:1.25rem;
+    margin:0 0 6px;
+  }
+  .feature p{margin:0; font-size:0.96rem;}
+
+  /* ---------- why I built it ---------- */
+  .founder{
+    background:var(--bg-alt);
+  }
+  .founder blockquote{
+    margin:0;
+    font-size:1.2rem;
+    line-height:1.55;
+    max-width:58ch;
+    color:var(--ink);
+  }
+  .founder cite{
+    display:block;
+    margin-top:16px;
+    font-style:normal;
+    color:var(--muted);
+    font-size:0.95rem;
+  }
+
+  /* ---------- faq ---------- */
+  details{
+    border-top:1px solid var(--line);
+    padding:16px 0;
+  }
+  details:last-of-type{border-bottom:1px solid var(--line);}
+  summary{
+    cursor:pointer;
+    font-weight:600;
+    font-size:1.05rem;
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{
+    content:"+";
+    font-family:'JetBrains Mono',monospace;
+    color:var(--clay);
+    font-size:1.3rem;
+    flex-shrink:0;
+  }
+  details[open] summary::after{content:"–";}
+  details p{margin:12px 0 0; color:var(--muted); max-width:60ch;}
+
+  /* ---------- final cta ---------- */
+  .final-cta{
+    background:var(--ink);
+    color:var(--bg);
+    text-align:left;
+  }
+  .final-cta h2{color:var(--white); font-size:clamp(1.8rem,4vw,2.6rem); max-width:16ch;}
+  .final-cta p{color:#B7BEB6; max-width:50ch;}
+  .final-cta .cta-note{color:#8A938A;}
+
+  /* ---------- footer ---------- */
+  footer{padding:32px 0; border-top:1px solid var(--line);}
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  footer nav a{margin-left:20px; color:var(--muted); text-decoration:none; font-size:0.92rem;}
+  footer nav a:first-child{margin-left:0;}
+  footer nav a:hover{color:var(--ink);}
+  .copyright{color:var(--muted); font-size:0.88rem;}
+
+  @media (max-width:680px){
+    .step, .step.reverse{grid-template-columns:1fr;}
+    .step.reverse .step-shot{order:0;}
+    .step-shot{max-width:220px;}
+    .features{grid-template-columns:1fr;}
+    .feature:nth-child(even){padding-left:0; border-left:none;}
+    .feature:nth-child(2){border-top:1px solid var(--line);}
+    footer .wrap{flex-direction:column; align-items:flex-start;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <img src="https://play-lh.googleusercontent.com/ZCNrDhJasG6wQB09drauQGVs_X3dVTflSrHs9pHeV5d29i_2Yk8zqIQ2AU4cOWPg163aqhO4B01gkA2DNIbc=w96-h96" alt="">
+      <span>Coaching Stopwatch</span>
+    </div>
+    <a class="badge-link" href="https://play.google.com/store/apps/details?id=com.hammi.coachingstopwatch" aria-label="Get Coaching Stopwatch on Google Play">
+      <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Every runner. Every split. One screen.</h1>
+      <p class="sub">Coaching Stopwatch runs up to ten independent timers side by side, so you can time run and rest intervals for a whole practice group without juggling stopwatches or a clipboard.</p>
+
+      <div class="stopwatch-demo">
+        <span class="dot" aria-hidden="true"></span>
+        <div>
+          <div class="label">Runner 1 · Running</div>
+          <div class="time mono" id="demoTime">00:00.00</div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="badge-link" href="https://play.google.com/store/apps/details?id=com.hammi.coachingstopwatch" aria-label="Get Coaching Stopwatch on Google Play">
+          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+        </a>
+        <span class="cta-note">Free. No account. No ads.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled for-who">
+    <div class="wrap">
+      <h2 class="kicker">Built for the person holding the stopwatch</h2>
+      <p><strong>Track and field coaches, running coaches, and PE teachers</strong> use Coaching Stopwatch for fartlek sessions, circuits, relay practice, or any workout where several groups need their own run and rest times recorded and reviewed later — not just watched once and forgotten.</p>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <h2 class="kicker">Set up before the group even lines up</h2>
+
+      <div class="step">
+        <div class="step-shot">
+          <img src="assets/screenshot-setup.png" alt="App screen asking how many groups are running today, set to 6, with a Next button">
+        </div>
+        <div class="step-content">
+          <div class="step-num">Step 1</div>
+          <h3>Choose your group count</h3>
+          <p>Set anywhere from 1 to 10 runners or groups for the session. That's the only number you need to decide before practice starts.</p>
+        </div>
+      </div>
+
+      <div class="step reverse">
+        <div class="step-shot">
+          <img src="assets/screenshot-names.png" alt="App screen for naming groups, with the first field filled in as varsity sprinters">
+        </div>
+        <div class="step-content">
+          <div class="step-num">Step 2</div>
+          <h3>Name your runners</h3>
+          <p>Label each timer — "Varsity Sprinters," "Lane 3," an athlete's name — or leave it blank and Coaching Stopwatch defaults to Runner 1, Runner 2, and on.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-shot">
+          <img src="assets/screenshot-timer.png" alt="Live timer screen for Runner 1 showing 15.78 seconds resting, with a split history of two run and rest intervals below">
+        </div>
+        <div class="step-content">
+          <div class="step-num">Step 3</div>
+          <h3>Tap to switch, tap to save</h3>
+          <p>Tap a timer to start the run, tap again to switch to rest. Every switch is logged with its type and time, building a full split history right on screen — use Start All and Stop All when you want the whole group in sync.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <h2 class="kicker">What you get on top of the timers</h2>
+      <div class="features">
+        <div class="feature">
+          <h4>1–10 independent timers</h4>
+          <p>Each runner or group runs on its own clock. Nothing has to move in lockstep unless you tell it to.</p>
+        </div>
+        <div class="feature">
+          <h4>Full split history</h4>
+          <p>Every RUN and REST interval is saved with its time, so you can review the whole session per runner, not just the last split.</p>
+        </div>
+        <div class="feature">
+          <h4>CSV export</h4>
+          <p>Export runner, type, and time to a CSV and share it by email, Drive, or any app — opens straight into Excel or Google Sheets.</p>
+        </div>
+        <div class="feature">
+          <h4>Runs in the background</h4>
+          <p>Lock your phone or switch apps and timers keep going, with a small ongoing notification so you know they're still live.</p>
+        </div>
+        <div class="feature">
+          <h4>Phone and tablet layouts</h4>
+          <p>Swipe between runners one at a time on a phone, or watch every timer at once in a grid on a tablet.</p>
+        </div>
+        <div class="feature">
+          <h4>No account, no ads</h4>
+          <p>Open it and start timing. Nothing to sign into, nothing interrupting your stopwatch mid-practice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled founder">
+    <div class="wrap">
+      <h2 class="kicker">Why this exists</h2>
+      <blockquote>
+        "I teach and coach, and I got tired of running several stopwatches by hand and copying times onto a clipboard after practice. Coaching Stopwatch is the tool I wanted for myself — independent timers for every group, and a CSV at the end so the numbers are actually usable."
+        <cite>— Brock Hammill, teacher and coach</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <h2 class="kicker">Questions coaches ask</h2>
+
+      <details>
+        <summary>How many runners can I track at once?</summary>
+        <p>Up to 10 independent timers in a single session, each with its own run/rest state and split history.</p>
+      </details>
+      <details>
+        <summary>Does it need an account or an internet connection?</summary>
+        <p>No. There's no sign-in, and the app doesn't need a network connection to time your practice.</p>
+      </details>
+      <details>
+        <summary>What's actually in the CSV export?</summary>
+        <p>Three columns — Runner, Type (RUN or REST), and Time — for every interval in the session, ready to open in Excel or Google Sheets.</p>
+      </details>
+      <details>
+        <summary>Will it keep timing if I lock my phone?</summary>
+        <p>Yes. Timers keep running in the background, with a small ongoing notification confirming they're still active.</p>
+      </details>
+      <details>
+        <summary>Does it cost anything?</summary>
+        <p>No. Coaching Stopwatch is free, with no ads getting between you and the stopwatch.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="wrap">
+      <h2>Get it before your next practice</h2>
+      <p>Free download, no account required, ready to use the moment your first group lines up.</p>
+      <div class="cta-row" style="margin-top:24px;">
+        <a class="badge-link" href="https://play.google.com/store/apps/details?id=com.hammi.coachingstopwatch" aria-label="Get Coaching Stopwatch on Google Play">
+          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="copyright">© 2026 Brock Hammill</div>
+    <nav>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="mailto:hammillbr@gmail.com">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var el = document.getElementById('demoTime');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){ el.textContent = '00:26.95'; return; }
+    var start = Date.now();
+    function tick(){
+      var elapsed = Date.now() - start;
+      if(elapsed > 59990){ start = Date.now(); elapsed = 0; }
+      var s = Math.floor(elapsed/1000);
+      var cs = Math.floor((elapsed%1000)/10);
+      el.textContent = String(s).padStart(2,'0') + ':' + String(cs).padStart(2,'0') + '.' + '0';
+      /* format mm:ss.cs -> keep simple 00:00.00 */
+      var mins = Math.floor(elapsed/60000);
+      var secs = Math.floor((elapsed%60000)/1000);
+      var hund = Math.floor((elapsed%1000)/10);
+      el.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
+    }
+    tick();
+    setInterval(tick, 40);
+  })();
+</script>
+
+</body>
+</html>
