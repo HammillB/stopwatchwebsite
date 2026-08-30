@@ -527,12 +527,20 @@
     }
 
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    console.log('Init: reduce motion =', reduce);
     if(!reduce){
       var demoEl1 = document.querySelector('.stopwatch-demo.run');
       var demoEl2 = document.querySelector('.stopwatch-demo.rest');
+      console.log('Init: demoEl1 =', !!demoEl1, 'demoEl2 =', !!demoEl2);
 
-      if(demoEl1) initDemo(demoEl1, 'demo1', 'run', 'Runner 1');
-      if(demoEl2) initDemo(demoEl2, 'demo2', 'rest', 'Runner 2');
+      if(demoEl1) {
+        console.log('Init: calling initDemo for demo1');
+        initDemo(demoEl1, 'demo1', 'run', 'Runner 1');
+      }
+      if(demoEl2) {
+        console.log('Init: calling initDemo for demo2');
+        initDemo(demoEl2, 'demo2', 'rest', 'Runner 2');
+      }
     }
   })();
 </script>
