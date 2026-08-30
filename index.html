@@ -461,88 +461,75 @@
 </footer>
 
 <script>
-  (function(){
-    function format(ms){
-      var mins = Math.floor(ms/60000);
-      var secs = Math.floor((ms%60000)/1000);
-      var hund = Math.floor((ms%1000)/10);
-      return String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
+function format(ms){
+  var mins = Math.floor(ms/60000);
+  var secs = Math.floor((ms%60000)/1000);
+  var hund = Math.floor((ms%1000)/10);
+  return String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
+}
+
+function initDemoTimers(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+
+  var demos = document.querySelectorAll('.stopwatch-demo');
+
+  demos.forEach(function(demoEl) {
+    var timeEl = demoEl.querySelector('.time');
+    var labelEl = demoEl.querySelector('.label');
+    if(!timeEl || !labelEl) return;
+
+    var isRunning = demoEl.classList.contains('run');
+    var state = {
+      elapsed: 0,
+      startTime: Date.now(),
+      isRunning: isRunning,
+      label: labelEl.textContent.split(' · ')[0]
+    };
+
+    function updateDisplay(){
+      timeEl.textContent = format(state.elapsed);
+      var stateText = state.isRunning ? 'Running' : 'Resting';
+      labelEl.textContent = state.label + ' · ' + stateText;
     }
 
-    var demoStates = {};
-
-    function initDemo(demoEl, id, initialState, initialLabel){
-      var timeEl = demoEl.querySelector('.time');
-      var labelEl = demoEl.querySelector('.label');
-
-      if(!timeEl || !labelEl) return;
-
-      var state = {
-        isRunning: initialState === 'run',
-        elapsed: 0,
-        startTime: Date.now(),
-        animationFrame: null,
-        label: initialLabel
-      };
-
-      demoStates[id] = state;
-
-      function updateDisplay(){
-        timeEl.textContent = format(state.elapsed);
-        var stateText = state.isRunning ? 'Running' : 'Resting';
-        labelEl.textContent = state.label + ' · ' + stateText;
-      }
-
-      function tick(){
-        if(state.isRunning){
-          state.elapsed = Date.now() - state.startTime;
-          if(state.elapsed > 59990){
-            state.elapsed = 0;
-            state.startTime = Date.now();
-          }
+    function tick(){
+      if(state.isRunning){
+        state.elapsed = Date.now() - state.startTime;
+        if(state.elapsed > 59990){
+          state.elapsed = 0;
+          state.startTime = Date.now();
         }
-        updateDisplay();
-        state.animationFrame = requestAnimationFrame(tick);
       }
-
       updateDisplay();
-      tick();
-
-      demoEl.style.cursor = 'pointer';
-      demoEl.addEventListener('click', function(){
-        state.isRunning = !state.isRunning;
-        state.elapsed = 0;
-        state.startTime = Date.now();
-
-        if(state.isRunning){
-          demoEl.classList.remove('rest');
-          demoEl.classList.add('run');
-        } else {
-          demoEl.classList.remove('run');
-          demoEl.classList.add('rest');
-        }
-
-        updateDisplay();
-      });
+      requestAnimationFrame(tick);
     }
 
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    console.log('Init: reduce motion =', reduce);
-    if(!reduce){
-      var demoEl1 = document.querySelector('.stopwatch-demo.run');
-      var demoEl2 = document.querySelector('.stopwatch-demo.rest');
-      console.log('Init: demoEl1 =', !!demoEl1, 'demoEl2 =', !!demoEl2);
+    updateDisplay();
+    tick();
 
-      if(demoEl1) {
-        console.log('Init: calling initDemo for demo1');
-        initDemo(demoEl1, 'demo1', 'run', 'Runner 1');
+    demoEl.style.cursor = 'pointer';
+    demoEl.addEventListener('click', function(){
+      state.isRunning = !state.isRunning;
+      state.elapsed = 0;
+      state.startTime = Date.now();
+
+      if(state.isRunning){
+        demoEl.classList.remove('rest');
+        demoEl.classList.add('run');
+      } else {
+        demoEl.classList.remove('run');
+        demoEl.classList.add('rest');
       }
-      if(demoEl2) {
-        console.log('Init: calling initDemo for demo2');
-        initDemo(demoEl2, 'demo2', 'rest', 'Runner 2');
-      }
-    }
-  })();
+    });
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', initDemoTimers);
+} else {
+  initDemoTimers();
+}
 </script>
 
 </body>
