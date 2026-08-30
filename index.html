@@ -494,12 +494,10 @@ function initDemoTimers(){
     }
 
     function tick(){
-      if(state.isRunning){
-        state.elapsed = Date.now() - state.startTime;
-        if(state.elapsed > 59990){
-          state.elapsed = 0;
-          state.startTime = Date.now();
-        }
+      state.elapsed = Date.now() - state.startTime;
+      if(state.elapsed > 59990){
+        state.elapsed = 0;
+        state.startTime = Date.now();
       }
       updateDisplay();
       requestAnimationFrame(tick);
