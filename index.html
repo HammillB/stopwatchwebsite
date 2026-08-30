@@ -468,22 +468,72 @@
       var hund = Math.floor((ms%1000)/10);
       return String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
     }
-    function runDemo(id, offsetMs, reducedText){
-      var el = document.getElementById(id);
-      if(!el) return;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(reduce){ el.textContent = reducedText; return; }
-      var start = Date.now() - offsetMs;
-      function tick(){
-        var elapsed = Date.now() - start;
-        if(elapsed > 59990){ start = Date.now(); elapsed = 0; }
-        el.textContent = format(elapsed);
+
+    var demoStates = {};
+
+    function initDemo(demoEl, id, initialState, initialLabel){
+      var timeEl = demoEl.querySelector('.time');
+      var labelEl = demoEl.querySelector('.label');
+
+      if(!timeEl || !labelEl) return;
+
+      var state = {
+        isRunning: initialState === 'run',
+        elapsed: 0,
+        startTime: Date.now(),
+        animationFrame: null,
+        label: initialLabel
+      };
+
+      demoStates[id] = state;
+
+      function updateDisplay(){
+        timeEl.textContent = format(state.elapsed);
+        var stateText = state.isRunning ? 'Running' : 'Resting';
+        labelEl.textContent = state.label + ' · ' + stateText;
       }
+
+      function tick(){
+        if(state.isRunning){
+          state.elapsed = Date.now() - state.startTime;
+          if(state.elapsed > 59990){
+            state.elapsed = 0;
+            state.startTime = Date.now();
+          }
+        }
+        updateDisplay();
+        state.animationFrame = requestAnimationFrame(tick);
+      }
+
+      updateDisplay();
       tick();
-      setInterval(tick, 40);
+
+      demoEl.style.cursor = 'pointer';
+      demoEl.addEventListener('click', function(){
+        state.isRunning = !state.isRunning;
+        state.elapsed = 0;
+        state.startTime = Date.now();
+
+        if(state.isRunning){
+          demoEl.classList.remove('rest');
+          demoEl.classList.add('run');
+        } else {
+          demoEl.classList.remove('run');
+          demoEl.classList.add('rest');
+        }
+
+        updateDisplay();
+      });
     }
-    runDemo('demoTime', 0, '00:26.95');
-    runDemo('demoTimeRest', 15780, '00:15.78');
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduce){
+      var demoEl1 = document.querySelector('.stopwatch-demo.run');
+      var demoEl2 = document.querySelector('.stopwatch-demo.rest');
+
+      if(demoEl1) initDemo(demoEl1, 'demo1', 'run', 'Runner 1');
+      if(demoEl2) initDemo(demoEl2, 'demo2', 'rest', 'Runner 2');
+    }
   })();
 </script>
 
