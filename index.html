@@ -20,6 +20,8 @@
     --amber:#9C6B1F;
     --line:#C9CCC2;
     --white:#FFFFFF;
+    --run:#4ADE80;
+    --rest:#4D1D97;
     --maxw:760px;
   }
   *{box-sizing:border-box;}
@@ -62,7 +64,7 @@
   .hero{padding:64px 0 48px;}
   .hero h1{
     font-size:clamp(2.4rem, 6vw, 3.6rem);
-    max-width:11ch;
+    max-width:18ch;
     color:var(--ink);
   }
   .hero p.sub{
@@ -70,6 +72,12 @@
     color:var(--muted);
     font-size:1.1rem;
     margin:18px 0 32px;
+  }
+  .stopwatch-demos{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:32px;
   }
   .stopwatch-demo{
     display:inline-flex;
@@ -79,24 +87,37 @@
     border:1px solid var(--line);
     border-radius:10px;
     padding:16px 22px;
-    margin-bottom:32px;
+  }
+  .stopwatch-demo.run{
+    background:var(--run);
+    border-color:#3ec973;
+  }
+  .stopwatch-demo.rest{
+    background:var(--rest);
+    border-color:#5c2aad;
   }
   .stopwatch-demo .dot{
-    width:9px; height:9px; border-radius:50%; background:var(--clay);
-    box-shadow:0 0 0 4px rgba(181,67,43,0.15);
+    width:9px; height:9px; border-radius:50%; background:var(--ink);
+    box-shadow:0 0 0 4px rgba(22,33,28,0.18);
+  }
+  .stopwatch-demo.rest .dot{
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(255,255,255,0.22);
   }
   .stopwatch-demo .label{
     font-size:0.78rem;
-    color:var(--muted);
+    color:var(--ink);
     text-transform:uppercase;
     letter-spacing:0.06em;
     margin-bottom:2px;
   }
+  .stopwatch-demo.rest .label{color:rgba(255,255,255,0.85);}
   .stopwatch-demo .time{
     font-size:1.7rem;
     font-weight:600;
     color:var(--ink);
   }
+  .stopwatch-demo.rest .time{color:#fff;}
   .cta-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
   .cta-row .badge-link img{height:54px;}
   .cta-note{color:var(--muted); font-size:0.92rem;}
@@ -146,7 +167,7 @@
     display:block;
     width:100%;
     border-radius:16px;
-    aspect-ratio:1080/2340;
+    aspect-ratio:1080/2164;
     object-fit:cover;
   }
 
@@ -270,14 +291,23 @@
 
   <section class="hero">
     <div class="wrap">
-      <h1>Every runner. Every split. One screen.</h1>
+      <h1>Every runner/group.<br>Every split.<br>One Device.</h1>
       <p class="sub">Coaching Stopwatch runs up to ten independent timers side by side, so you can time run and rest intervals for a whole practice group without juggling stopwatches or a clipboard.</p>
 
-      <div class="stopwatch-demo">
-        <span class="dot" aria-hidden="true"></span>
-        <div>
-          <div class="label">Runner 1 · Running</div>
-          <div class="time mono" id="demoTime">00:00.00</div>
+      <div class="stopwatch-demos">
+        <div class="stopwatch-demo run">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <div class="label">Runner 1 · Running</div>
+            <div class="time mono" id="demoTime">00:00.00</div>
+          </div>
+        </div>
+        <div class="stopwatch-demo rest">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <div class="label">Runner 2 · Resting</div>
+            <div class="time mono" id="demoTimeRest">00:15.78</div>
+          </div>
         </div>
       </div>
 
@@ -432,24 +462,28 @@
 
 <script>
   (function(){
-    var el = document.getElementById('demoTime');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(reduce){ el.textContent = '00:26.95'; return; }
-    var start = Date.now();
-    function tick(){
-      var elapsed = Date.now() - start;
-      if(elapsed > 59990){ start = Date.now(); elapsed = 0; }
-      var s = Math.floor(elapsed/1000);
-      var cs = Math.floor((elapsed%1000)/10);
-      el.textContent = String(s).padStart(2,'0') + ':' + String(cs).padStart(2,'0') + '.' + '0';
-      /* format mm:ss.cs -> keep simple 00:00.00 */
-      var mins = Math.floor(elapsed/60000);
-      var secs = Math.floor((elapsed%60000)/1000);
-      var hund = Math.floor((elapsed%1000)/10);
-      el.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
+    function format(ms){
+      var mins = Math.floor(ms/60000);
+      var secs = Math.floor((ms%60000)/1000);
+      var hund = Math.floor((ms%1000)/10);
+      return String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0') + '.' + String(hund).padStart(2,'0');
     }
-    tick();
-    setInterval(tick, 40);
+    function runDemo(id, offsetMs, reducedText){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce){ el.textContent = reducedText; return; }
+      var start = Date.now() - offsetMs;
+      function tick(){
+        var elapsed = Date.now() - start;
+        if(elapsed > 59990){ start = Date.now(); elapsed = 0; }
+        el.textContent = format(elapsed);
+      }
+      tick();
+      setInterval(tick, 40);
+    }
+    runDemo('demoTime', 0, '00:26.95');
+    runDemo('demoTimeRest', 15780, '00:15.78');
   })();
 </script>
 
