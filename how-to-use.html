@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Use Coaching Stopwatch: Multi-Runner Interval Timer</title>
+<meta name="description" content="Step-by-step guide to timing multiple runners with Coaching Stopwatch: set up groups, switch run/rest intervals, review splits, and export a CSV.">
+<link rel="canonical" href="https://coachingstopwatch.com/how-to-use.html">
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coachingstopwatch.com/how-to-use.html">
+<meta property="og:title" content="How to Use Coaching Stopwatch: Multi-Runner Interval Timer">
+<meta property="og:description" content="Set up groups, switch run/rest intervals, review splits, and export a CSV. A step-by-step guide for coaches.">
+<meta property="og:image" content="https://coachingstopwatch.com/assets/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta property="og:image:alt" content="Coaching Stopwatch — track multiple runners and rest intervals">
+<meta property="og:site_name" content="Coaching Stopwatch">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Use Coaching Stopwatch: Multi-Runner Interval Timer">
+<meta name="twitter:description" content="Set up groups, switch run/rest intervals, review splits, and export a CSV. A step-by-step guide for coaches.">
+<meta name="twitter:image" content="https://coachingstopwatch.com/assets/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=optional" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Coaching Stopwatch", "item": "https://coachingstopwatch.com/"},
+    {"@type": "ListItem", "position": 2, "name": "How to Use", "item": "https://coachingstopwatch.com/how-to-use.html"}
+  ]
+}
+</script>
+
+<style>
+  :root{
+    --bg:#F1F2ED;
+    --bg-alt:#E7E9E1;
+    --ink:#16211C;
+    --muted:#5B655F;
+    --clay:#B5432B;
+    --clay-dark:#8E3220;
+    --turf:#2F5233;
+    --line:#C9CCC2;
+    --white:#FFFFFF;
+    --run:#4ADE80;
+    --rest:#4D1D97;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--clay-dark);}
+  a:focus-visible, summary:focus-visible{outline:3px solid var(--turf); outline-offset:3px;}
+  h1,h2,h3{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    line-height:1.08;
+    margin:0 0 0.4em 0;
+    letter-spacing:0.2px;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- header ---------- */
+  header{padding:22px 0; border-bottom:1px solid var(--line);}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);}
+  .brand img{width:34px; height:34px; border-radius:8px; display:block;}
+  .brand span{font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:1.3rem;}
+  .badge-link img{height:42px; width:auto; aspect-ratio:646/250; display:block;}
+
+  /* ---------- intro ---------- */
+  .intro{padding:56px 0 24px;}
+  .crumbs{font-size:0.9rem; color:var(--muted); margin:0 0 18px;}
+  .crumbs a{color:var(--clay-dark); text-decoration:none;}
+  .crumbs a:hover{text-decoration:underline;}
+  .intro h1{font-size:clamp(2.3rem, 6vw, 3.3rem); max-width:20ch;}
+  .lede{color:var(--muted); font-size:1.12rem; max-width:56ch; margin:12px 0 0;}
+
+  /* ---------- quick start + toc ---------- */
+  section{padding:44px 0;}
+  section.ruled{border-top:1px solid var(--line);}
+  h2{font-size:1.9rem; margin-bottom:14px;}
+  h3{font-size:1.35rem; margin:28px 0 8px;}
+  p{max-width:62ch; margin:0 0 14px;}
+  .muted{color:var(--muted);}
+  .quick{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 26px 10px;
+  }
+  .quick h2{font-size:1.5rem; margin-bottom:10px;}
+  ol.steps{margin:0 0 12px; padding-left:1.3em;}
+  ol.steps li{margin-bottom:8px; padding-left:4px;}
+  ol.steps li::marker{font-family:'JetBrains Mono',monospace; color:var(--clay); font-weight:600;}
+  .toc{margin:28px 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:8px 10px;}
+  .toc a{
+    display:inline-block; padding:6px 12px; font-size:0.9rem; text-decoration:none;
+    border:1px solid var(--line); border-radius:999px; background:var(--white); color:var(--ink);
+  }
+  .toc a:hover{border-color:var(--clay); color:var(--clay-dark);}
+
+  /* ---------- screenshot steps ---------- */
+  .how-step{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:32px;
+    align-items:start;
+    padding:26px 0;
+  }
+  .how-step:not(:last-child){border-bottom:1px solid var(--line);}
+  .shot{
+    background:var(--ink);
+    border-radius:24px;
+    padding:9px;
+    box-shadow:0 18px 40px -20px rgba(22,33,28,0.45);
+    width:220px;
+  }
+  .shot img{display:block; width:100%; height:auto; border-radius:16px;}
+  .step-num{font-family:'JetBrains Mono',monospace; color:var(--clay); font-size:0.95rem; margin-bottom:6px;}
+  .how-step h3{margin-top:0;}
+  .how-step p:last-child{margin-bottom:0;}
+
+  /* ---------- states ---------- */
+  dl.states{margin:14px 0 0; display:grid; gap:10px;}
+  dl.states div{
+    display:grid; grid-template-columns:auto 1fr; gap:4px 14px; align-items:baseline;
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:12px 16px;
+  }
+  dl.states dt{
+    font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;
+    padding:3px 10px; border-radius:999px; white-space:nowrap;
+  }
+  dl.states dt.ready{background:var(--bg-alt); color:var(--ink);}
+  dl.states dt.run{background:var(--run); color:var(--ink);}
+  dl.states dt.rest{background:var(--rest); color:#fff;}
+  dl.states dd{margin:0; font-size:0.97rem;}
+
+  .callout{
+    border-left:4px solid var(--turf);
+    background:var(--bg-alt);
+    padding:14px 18px;
+    border-radius:0 10px 10px 0;
+    margin:20px 0 0;
+    max-width:62ch;
+  }
+  .callout p{margin:0; font-size:0.97rem;}
+
+  ul.plain{margin:0 0 14px; padding-left:1.2em; max-width:62ch;}
+  ul.plain li{margin-bottom:6px;}
+
+  /* ---------- csv table ---------- */
+  .table-scroll{overflow-x:auto; margin:14px 0; max-width:100%;}
+  table{border-collapse:collapse; background:var(--white); font-size:0.92rem; min-width:360px;}
+  caption{text-align:left; font-size:0.88rem; color:var(--muted); padding:0 0 8px;}
+  th, td{border:1px solid var(--line); padding:8px 14px; text-align:left; white-space:nowrap;}
+  th{background:var(--bg-alt); font-weight:600;}
+  td.t{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- workouts ---------- */
+  .workouts{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
+  .workout{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:18px 20px;}
+  .workout h3{font-size:1.2rem; margin:0 0 6px;}
+  .workout p{font-size:0.95rem; margin:0; color:var(--muted);}
+
+  /* ---------- faq ---------- */
+  details{border-top:1px solid var(--line); padding:16px 0;}
+  details:last-of-type{border-bottom:1px solid var(--line);}
+  summary{
+    cursor:pointer; font-weight:600; font-size:1.05rem; list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+"; font-family:'JetBrains Mono',monospace; color:var(--clay); font-size:1.3rem; flex-shrink:0;}
+  details[open] summary::after{content:"–";}
+  details p{margin:12px 0 0; color:var(--muted);}
+
+  /* ---------- final cta ---------- */
+  .final-cta{background:var(--ink); color:var(--bg);}
+  .final-cta h2{color:var(--white); font-size:clamp(1.8rem,4vw,2.6rem); max-width:18ch;}
+  .final-cta p{color:#B7BEB6; max-width:50ch;}
+  .final-cta .badge-link img{height:54px;}
+  .final-cta .related{margin-top:22px; font-size:0.95rem;}
+  .final-cta .related a{color:#E4E8E1;}
+
+  /* ---------- footer ---------- */
+  footer{padding:32px 0; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+  footer nav a{margin-left:20px; color:var(--muted); text-decoration:none; font-size:0.92rem;}
+  footer nav a:first-child{margin-left:0;}
+  footer nav a:hover{color:var(--ink);}
+  .copyright{color:var(--muted); font-size:0.88rem;}
+
+  @media (max-width:680px){
+    .how-step{grid-template-columns:1fr; gap:18px;}
+    .shot{width:200px;}
+    .workouts{grid-template-columns:1fr;}
+    dl.states div{grid-template-columns:1fr;}
+    footer .wrap{flex-direction:column; align-items:flex-start;}
+    footer nav a{margin:0 16px 0 0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-icon.webp" alt="Coaching Stopwatch app icon" width="128" height="128">
+      <span>Coaching Stopwatch</span>
+    </a>
+    <a class="badge-link" href="https://play.google.com/store/apps/details?id=com.hammi.coachingstopwatch&amp;referrer=utm_source%3Dcoachingstopwatch.com%26utm_medium%3Dreferral%26utm_campaign%3Dwebsite%26utm_content%3Dhowto_header" aria-label="Get Coaching Stopwatch on Google Play">
+      <img src="assets/google-play-badge.png" alt="Get it on Google Play">
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <section class="intro">
+    <div class="wrap">
+      <p class="crumbs"><a href="index.html">Coaching Stopwatch</a> &rsaquo; How to use</p>
+      <h1>How to use Coaching Stopwatch</h1>
+      <p class="lede">A step-by-step guide to timing up to ten runners or groups on one phone or tablet: setting up, switching between run and rest intervals, reading your splits, and exporting the results to a CSV.</p>
+
+      <div class="quick" style="margin-top:32px;">
+        <h2>Quick start</h2>
+        <ol class="steps">
+          <li>Open the app and choose how many groups are running (1 to 10), then tap <strong>Next</strong>.</li>
+          <li>Name each group, or leave the fields blank, then tap <strong>Start Workout</strong>.</li>
+          <li>Tap <strong>Start Run</strong> on a runner's timer when they go.</li>
+          <li>Tap <strong>Start Rest</strong> when the rep ends, and <strong>Start Run</strong> again for the next one. Each switch saves a split.</li>
+          <li>Tap <strong>Stop</strong> when that runner is done, then use the share icon to export a CSV.</li>
+        </ol>
+      </div>
+
+      <ul class="toc" aria-label="On this page">
+        <li><a href="#setup">Set up a session</a></li>
+        <li><a href="#timing">Time run and rest intervals</a></li>
+        <li><a href="#everyone">Start everyone at once</a></li>
+        <li><a href="#splits">Splits and stats</a></li>
+        <li><a href="#switching">Switch between runners</a></li>
+        <li><a href="#export">Export to CSV</a></li>
+        <li><a href="#background">Background timing</a></li>
+        <li><a href="#reset">Reset and end a session</a></li>
+        <li><a href="#workouts">Example workouts</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ruled" id="setup">
+    <div class="wrap">
+      <h2>Set up a session</h2>
+      <p class="muted">Setup takes two screens and about ten seconds, so you can do it while the group is still stretching.</p>
+
+      <div class="how-step">
+        <div class="shot">
+          <img src="assets/screenshot-setup.webp" width="719" height="1442" decoding="async" alt="Coaching Stopwatch setup screen asking how many groups are running today, set to 6, with a Next button">
+        </div>
+        <div>
+          <div class="step-num">Step 1</div>
+          <h3>Choose how many groups are running</h3>
+          <p>The first screen asks <em>"How many groups are running today?"</em> Use the minus and plus buttons to pick any number from 1 to 10, then tap <strong>Next</strong>.</p>
+          <p>A "group" can be a single athlete, a pair, or a whole heat. Coaching Stopwatch just gives each one its own independent timer.</p>
+        </div>
+      </div>
+
+      <div class="how-step">
+        <div class="shot">
+          <img src="assets/screenshot-names.webp" width="719" height="1442" decoding="async" alt="Coaching Stopwatch screen for naming runner groups with the first field filled in as varsity sprinters">
+        </div>
+        <div>
+          <div class="step-num">Step 2</div>
+          <h3>Name your runners or groups</h3>
+          <p>Type a label for each timer: "Varsity Sprinters," "Lane 3," or an athlete's name. Leave a field blank and it defaults to Runner 1, Runner 2, and so on. Tap <strong>Start Workout</strong> to open the timers.</p>
+          <p>You can rename any timer later by tapping the name at the top of its card.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="timing">
+    <div class="wrap">
+      <h2>Time run and rest intervals</h2>
+
+      <div class="how-step">
+        <div class="shot">
+          <img src="assets/screenshot-timer.webp" width="719" height="1442" decoding="async" alt="Coaching Stopwatch live interval timer showing Runner 1 resting at 15.78 seconds with run and rest split history below">
+        </div>
+        <div>
+          <div class="step-num">Step 3</div>
+          <h3>Tap to switch, tap to save</h3>
+          <p>Each runner has a big timer and two buttons. The large button always shows what happens <em>next</em>:</p>
+          <ul class="plain">
+            <li><strong>Start Run</strong> begins a run interval from zero.</li>
+            <li><strong>Start Rest</strong> ends the run, saves it as a split, and immediately starts a rest timer from zero.</li>
+            <li>Tap <strong>Start Run</strong> again to end the rest, save it, and start the next run.</li>
+            <li><strong>Stop</strong> saves the interval in progress and returns that runner to zero, ready for a fresh start.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What the status badge means</h3>
+      <dl class="states">
+        <div><dt class="ready">Ready to Run</dt><dd>The timer is at 00:00.00 and waiting. The button reads Start Run.</dd></div>
+        <div><dt class="run">Running</dt><dd>A run interval is counting up and the card turns green. The button reads Start Rest.</dd></div>
+        <div><dt class="rest">Resting</dt><dd>A rest interval is counting up and the card turns purple. The button reads Start Run.</dd></div>
+      </dl>
+
+      <div class="callout">
+        <p><strong>Tip:</strong> Intervals shorter than half a second are not saved, so an accidental double tap will not pollute a runner's split history.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="everyone">
+    <div class="wrap">
+      <h2>Start everyone at once</h2>
+      <p>Above the timers are two shared buttons. <strong>Start All</strong> starts every timer that is not already running, which is perfect for a mass start or a group time trial. <strong>Stop All</strong> stops every running timer and saves each one's current interval.</p>
+      <p>Every runner still keeps an independent timer, so after a shared start you can switch each one to rest at their own finish. Nothing has to stay in lockstep unless you want it to.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="splits">
+    <div class="wrap">
+      <h2>Read your splits and stats</h2>
+      <p>Below the timer, each runner's saved intervals build up in a list, newest first, labeled <strong>RUN 1</strong>, <strong>REST 1</strong>, <strong>RUN 2</strong>, and so on. Once a runner has at least one saved run, a stats bar appears with three numbers:</p>
+      <ul class="plain">
+        <li><strong>Intervals:</strong> how many run intervals have been recorded.</li>
+        <li><strong>Avg Pace:</strong> the average time across those run intervals.</li>
+        <li><strong>Best:</strong> the fastest single run interval.</li>
+      </ul>
+      <p>Rest intervals are listed in the history but are not counted in these stats. To wipe one runner's history, tap <strong>Clear</strong> next to the splits heading. That only affects that runner.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="switching">
+    <div class="wrap">
+      <h2>Switch between runners</h2>
+      <h3>On a phone</h3>
+      <p>One runner is shown at a time. <strong>Swipe left or right</strong> to move to the next timer. The row of dots under the card shows which runner you are on, and the list loops around from the last runner back to the first. Timers you are not looking at keep running.</p>
+      <h3>On a tablet</h3>
+      <p>On tablets and other wide screens, every timer appears at once in a grid, so you can watch and tap all of them without swiping.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="export">
+    <div class="wrap">
+      <h2>Export your session to CSV</h2>
+      <p>Tap the <strong>share icon</strong> in the top bar to create a CSV of the whole session. Android's share sheet opens so you can send the file by email, save it to Google Drive, or hand it to any app you like. The file is named with the date, for example <span class="mono">Track Workout Session 9-25-2026.csv</span>.</p>
+      <p>The first column is the interval label and there is one column per runner, so the results open cleanly in Excel or Google Sheets:</p>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Example CSV layout (times shown as minutes:seconds.hundredths)</caption>
+          <thead><tr><th scope="col">Label</th><th scope="col">Varsity Sprinters</th><th scope="col">Lane 3</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Run 1</th><td class="t">00:58.32</td><td class="t">01:01.10</td></tr>
+            <tr><th scope="row">Rest 1</th><td class="t">01:30.05</td><td class="t">01:29.88</td></tr>
+            <tr><th scope="row">Run 2</th><td class="t">00:57.94</td><td class="t">01:00.47</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>If two runners' interval types do not line up on the same row, for instance because one was stopped and restarted, that row is labeled <strong>Interval N</strong> instead of Run or Rest so no column is mislabeled. Export before you end a session, because ending it discards the times.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="background">
+    <div class="wrap">
+      <h2>Keep timing with the screen off</h2>
+      <p>Timers keep running when you lock your phone or switch to another app. While any timer is active, Coaching Stopwatch shows a small ongoing notification so you know it is still live. On Android 13 and newer, the app asks for notification permission the first time you start a timer.</p>
+      <p>If the app is closed or restarted mid-workout, reopening it restores your runner names, saved splits, and any timers that were running, and they carry on counting from the correct elapsed time. A session is only restored if a timer was started or a split was recorded, so an empty setup never follows you around.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="reset">
+    <div class="wrap">
+      <h2>Reset, clear, or end a session</h2>
+      <p>There are three ways to start over, each with a different reach:</p>
+      <dl class="states">
+        <div><dt class="ready">Clear</dt><dd>On a runner's card, deletes only that runner's saved splits.</dd></div>
+        <div><dt class="ready">Reset</dt><dd>The circular-arrow icon in the top bar. After you confirm, it stops every timer and clears all splits, but keeps your runner names and group count.</dd></div>
+        <div><dt class="ready">End session</dt><dd>Settings, then "End session and start over." Discards everything and returns to the setup screen so you can pick a new group count.</dd></div>
+      </dl>
+      <p style="margin-top:16px;">The gear icon in the top bar also opens Settings, where you can choose a <strong>System</strong>, <strong>Light</strong>, or <strong>Dark</strong> appearance, read the legal documents, or rate the app.</p>
+    </div>
+  </section>
+
+  <section class="ruled" id="workouts">
+    <div class="wrap">
+      <h2>Example workouts</h2>
+      <p class="muted">Ideas for putting the timers to work at practice.</p>
+      <div class="workouts">
+        <div class="workout">
+          <h3>Interval repeats</h3>
+          <p>Doing 400 m repeats with a set recovery? Tap Start All on the whistle, tap Start Rest as each runner finishes, and tap Start Run when their rest time is up. Every rep and recovery is saved.</p>
+        </div>
+        <div class="workout">
+          <h3>Time trials</h3>
+          <p>Line up the heat, tap Start All on the gun, then tap Stop on each runner's timer as they cross the line. Anyone who runs several reps also gets an automatic Best and Avg Pace.</p>
+        </div>
+        <div class="workout">
+          <h3>Fartlek and pyramids</h3>
+          <p>Alternate hard and easy segments by tapping between Start Run and Start Rest. The split list keeps the whole pattern in order for review after practice.</p>
+        </div>
+        <div class="workout">
+          <h3>Circuits and stations</h3>
+          <p>Give each station or team its own timer. Use the run timer for work periods and the rest timer for rotation, then export the CSV to compare groups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="faq">
+    <div class="wrap">
+      <h2>Frequently asked questions</h2>
+
+      <details>
+        <summary>How many runners can I time at once?</summary>
+        <p>Up to 10 independent timers in one session, each with its own run/rest state and split history.</p>
+      </details>
+      <details>
+        <summary>Why didn't my split get saved?</summary>
+        <p>Intervals of half a second or less are ignored so accidental taps do not create junk splits. Anything longer is saved when you switch to rest or run, or when you tap Stop.</p>
+      </details>
+      <details>
+        <summary>Does tapping Stop delete my time?</summary>
+        <p>No. Stop saves the interval that was in progress, then resets that runner's timer to zero. The saved time stays in the splits list and in your CSV export.</p>
+      </details>
+      <details>
+        <summary>Can I change a runner's name after I start?</summary>
+        <p>Yes. Tap the name at the top of the runner's card, edit it, and tap Save. If you clear the name it goes back to Runner 1, Runner 2, and so on.</p>
+      </details>
+      <details>
+        <summary>Does it work without an internet connection or an account?</summary>
+        <p>Yes. There is no sign-in and the app does not need a network connection to time your practice.</p>
+      </details>
+      <details>
+        <summary>What if the export doesn't open?</summary>
+        <p>If Android cannot create the file, the app shows a "Could not export session" message. Try again, and if it keeps happening, email <a href="mailto:support@coachingstopwatch.com">support@coachingstopwatch.com</a> and include your Android version.</p>
+      </details>
+      <details>
+        <summary>Is Coaching Stopwatch free?</summary>
+        <p>Yes. It is free to download, with no ads and no account required.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="wrap">
+      <h2>Ready to time your next practice?</h2>
+      <p>Free download, no account required, and set up in seconds.</p>
+      <div class="cta-row" style="margin-top:24px;">
+        <a class="badge-link" href="https://play.google.com/store/apps/details?id=com.hammi.coachingstopwatch&amp;referrer=utm_source%3Dcoachingstopwatch.com%26utm_medium%3Dreferral%26utm_campaign%3Dwebsite%26utm_content%3Dhowto_cta" aria-label="Get Coaching Stopwatch on Google Play">
+          <img src="assets/google-play-badge.png" alt="Get it on Google Play">
+        </a>
+      </div>
+      <p class="related">Want the overview first? <a href="index.html">See what Coaching Stopwatch does</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="copyright">© 2026 Sulfide Designs</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="mailto:support@coachingstopwatch.com">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
